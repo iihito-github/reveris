@@ -10,27 +10,30 @@ public abstract class Game
 {
 	private long waitTime;
 	private long nextTime;
-	
+
+	private static float lastPointX = -1;
+	private static float lastPointY = -1;
+
 	public Game(long wt)
 	{
 		waitTime = wt;
 		nextTime = System.currentTimeMillis() + waitTime;
 	}
-	
+
 	public void waitAndUpdate(Stage st)
 	{
-		if(nextTime > System.currentTimeMillis())
+		if (nextTime > System.currentTimeMillis())
 		{
 			return;
 		}
 		update(st);
 		nextTime = System.currentTimeMillis() + waitTime;
 	}
-	
+
 	public abstract void update(Stage st);
 	public abstract void draw(Stage st, Activity act);
 	public abstract void event(Stage st, MotionEvent ev);
-	
+
 	public void drawStage(Stage st, Activity act)
 	{
 		TextView mainText = act.findViewById(R.id.mainTextView);
@@ -48,6 +51,14 @@ public abstract class Game
 			list[block.getY()][block.getX()] = block.getBlockImage();
 		}
 
+		if (st.getMino() != null)
+		{
+			for (Block block : st.getMino().getBlockList())
+			{
+				list[block.getY()][block.getX()] = block.getBlockImage();
+			}
+		}
+
 		String text = "";
 		for (String[] xl : list)
 		{
@@ -55,6 +66,22 @@ public abstract class Game
 		}
 
 		mainText.setText(text);
-		subText.setText(waitTime +","+nextTime);
+		subText.setText(waitTime + "," + nextTime);
+	}
+
+	public static void setLastPoint(float x, float y)
+	{
+		lastPointX = x;
+		lastPointY = y;
+	}
+
+	public static float getLastPointX()
+	{
+		return lastPointX;
+	}
+
+	public static float getLastPointY()
+	{
+		return lastPointY;
 	}
 }

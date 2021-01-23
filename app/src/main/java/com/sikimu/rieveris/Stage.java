@@ -13,6 +13,7 @@ public class Stage
 	public final static int PLAY_HEIGHT = 20;
 
 	private Game game;
+	private Mino mino;
 	private ArrayList<Block> blockList;
 
 	public Stage()
@@ -24,7 +25,7 @@ public class Stage
 	{
 		blockList.clear();
 
-		for (int i = HEIGHT - PLAY_HEIGHT;i < HEIGHT;i++)
+		for (int i = 0;i < HEIGHT;i++)
 		{
 			blockList.add(new Other(0, i));
 			blockList.add(new Other(WIDTH - 1, i));
@@ -37,17 +38,14 @@ public class Stage
 
 	public void setNewMino()
 	{
-		blockList.add(new Original(4, 0));
-		blockList.add(new Original(4, 1));
-		blockList.add(new Original(5, 0));
-		blockList.add(new Original(5, 1));
+		mino = new Mino();
 	}
 
 	public boolean isDrop()
 	{
-		for (Block block : getUnLockBlockList())
+		for (Block block : mino.getBlockList())
 		{
-			for (Block b : getLockBlockList())
+			for (Block b : blockList)
 			{
 				if (block.getX() == b.getX()
 					&& block.getY() + 1 == b.getY())
@@ -61,53 +59,78 @@ public class Stage
 
 	public void drop()
 	{
-		for (Block block : getUnLockBlockList())
+		for (Block block : mino.getBlockList())
 		{
 			block.moveY(1);
 		}
 	}
+	
+	public boolean isSlideLeft()
+	{
+		for (Block block : mino.getBlockList())
+		{
+			for (Block b : blockList)
+			{
+				if (block.getX() - 1 == b.getX()
+					&& block.getY() == b.getY())
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean isSlideRight()
+	{
+		for (Block block : mino.getBlockList())
+		{
+			for (Block b : blockList)
+			{
+				if (block.getX() + 1 == b.getX()
+					&& block.getY() == b.getY())
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public void slideLeft()
+	{
+		for (Block block : mino.getBlockList())
+		{
+			block.moveX(-1);
+		}
+	}
 
+	public void slideRight()
+	{
+		for (Block block : mino.getBlockList())
+		{
+			block.moveX(1);
+		}
+	}
+	
+	public void spin()
+	{
+		mino.spin();
+	}
+	
 	public void allLock()
 	{
-		for (Block block : getUnLockBlockList())
-		{
-			block.setLock();
-		}
+		blockList.addAll(mino.getBlockList());
 	}
 
 	public ArrayList<Block> getBlockList()
 	{
 		return blockList;
 	}
-
-	public ArrayList<Block> getUnLockBlockList()
+	
+	public Mino getMino()
 	{
-		ArrayList<Block> list = new ArrayList<Block>();
-		for (Block block : getBlockList())
-		{
-			if (block.isLock())
-			{
-				continue;
-			}
-			list.add(block);
-		}
-
-		return list;
-	}
-
-	public ArrayList<Block> getLockBlockList()
-	{
-		ArrayList<Block> list = new ArrayList<Block>();
-		for (Block block : getBlockList())
-		{
-			if (block.isLock() == false)
-			{
-				continue;
-			}
-			list.add(block);
-		}
-
-		return list;
+		return mino;
 	}
 
 	public void setGame(Game gm)
@@ -129,4 +152,5 @@ public class Stage
 	{
 		game.event(this, ev);
 	}
+	
 }

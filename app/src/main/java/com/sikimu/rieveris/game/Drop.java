@@ -32,7 +32,37 @@ public class Drop extends Game
 	@Override
 	public void event(Stage st, MotionEvent ev)
 	{
-		// TODO: Implement this method
+		switch(ev.getAction())
+		{
+			case MotionEvent.ACTION_DOWN:
+				setLastPoint(ev.getX(),ev.getY());
+				break;
+			case MotionEvent.ACTION_UP:
+				if(ev.getEventTime() - ev.getDownTime() < 500){
+					st.spin();
+				}
+				break;
+			case MotionEvent.ACTION_MOVE:
+				float x = ev.getX() - getLastPointX();
+				if(x < -50)
+				{
+					if(st.isSlideLeft())
+					{
+						st.slideLeft();
+					}
+					setLastPoint(ev.getX(),ev.getY());
+				}
+				else if(x > 50)
+				{
+					if(st.isSlideRight())
+					{
+						st.slideRight();
+					}
+					setLastPoint(ev.getX(),ev.getY());
+				}
+				break;
+		}
+		
 	}
 
 }

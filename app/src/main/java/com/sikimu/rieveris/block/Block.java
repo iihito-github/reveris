@@ -1,5 +1,6 @@
 package com.sikimu.rieveris.block;
 import java.util.*;
+import java.util.logging.*;
 
 public abstract class Block
 {
@@ -36,6 +37,12 @@ public abstract class Block
 		return posY;
 	}
 	
+	public void set(int x, int y)
+	{
+		posX = x;
+		posY = y;
+	}
+
 	public void moveX(int mov)
 	{
 		posX = posX + mov;
@@ -44,5 +51,12 @@ public abstract class Block
 	public void moveY(int mov)
 	{
 		posY = posY + mov;
+	}
+
+	public void spin(Block point)
+	{
+		int x = point.getX() - (point.getY() - posY);
+		int y = point.getY() + (point.getX() - posX);
+		set(x,y);
 	}
 }
